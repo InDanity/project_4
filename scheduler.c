@@ -12,16 +12,13 @@ struct job{
 };
 
 struct job *listHead;
-{
-    /* data */
-};
 
 
 int main(int argc, char *argv[]){
     char *myself = argv[0];
     char *scheduleType = argv[1];
     char *jobFile = argv[2];
-    char timeSlice = argv[3];
+    char *timeSlice = argv[3];
 
     
     
@@ -31,13 +28,16 @@ int main(int argc, char *argv[]){
     }
 
     // Read input file
-    int fd = fopen(jobFile, "r");
+    FILE * fd = fopen(jobFile, "r");
     char buffer[100];
 
-    int lineNumber = 0;
-    while (!eof(fd)){ // While not at the end of the file
+    int lineNum = 0;
+    
+    while (!feof(fd)){ // While not at the end of the file
         int rc = getline(buffer, 99, fd);
         int runLength = atoi(buffer);
+
+        printf(runLength);
 
         // Insert into linked list, runLength and lineNumber as job ID
         if(listHead == NULL){
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
         } else{
             // add to end of list
         }
-        lineNumber++;
+        lineNum++;
     }
     fclose(fd);
 
