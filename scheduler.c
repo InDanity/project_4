@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
     fclose(fd);
 
     if(strcmp(scheduleType, "FIFO") == 0){ // If given "FIFO"
-        // DO FIFO STUFF HERE
+        // DO FIFO STUFF HEREEEE
     }
 
     if(strcmp(scheduleType, "SJF") == 0){ // If given "SJF"
