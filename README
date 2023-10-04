@@ -1,0 +1,4 @@
+10/04/23
+
+Making the basic layout of the project:
+    Using int main(int argc, char *argv[]) to get all arguments.
