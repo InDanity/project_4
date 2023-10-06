@@ -7,6 +7,7 @@ struct job{
     int id;
     int length;
     // Other data
+    struct job* prev;
     struct job* next;
  
 };
@@ -33,8 +34,8 @@ int main(int argc, char *argv[]){
 
     int lineNum = 0;
     
-    if(fd != NULL){
-        while (!feof(fd) && lineNum < 100){ // While not at the end of the file //TAKE OUT THE LINENUM THING THIS IS JUST TO KEEP FROM INFINITE LOOP BEFORE WE IMPLEMENT FUNTIONALITY
+    if(fd != NULL && lineNum < 100){
+        while (!feof(fd)){ // While not at the end of the file //TAKE OUT THE LINENUM THING THIS IS JUST TO KEEP FROM INFINITE LOOP BEFORE WE IMPLEMENT FUNTIONALITY
             //int rc = getline(*buffer, 99, fd); //this line is causing a segmentation fault :/
             int runLength = atoi(buffer);
         
@@ -42,15 +43,15 @@ int main(int argc, char *argv[]){
 
             // Insert into linked list, runLength and lineNumber as job ID
             if(listHead == NULL){
-                // Create node to be pointed at, set listHead to point at it
+            // Create node to be pointed at, set listHead to point at it
 
-        //idk if any of this is right lol pls dan help:
+            //idk if any of this is right lol pls dan help:
                 listHead = malloc(sizeof(struct job));
 
                 struct job *node;
                 node = malloc(sizeof(struct job));
-                    node->id = lineNum; 
-                    node->length = runLength;
+                node->id = lineNum; 
+                node->length = runLength;
                 listHead->next = node;
 
             } else{
