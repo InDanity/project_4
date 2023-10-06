@@ -8,6 +8,7 @@ struct job{
     int length;
     // Other data
     struct job *next;
+    int checked;
  
 };
 
@@ -30,6 +31,7 @@ void addNode(struct job* jobList, int jobID, int runLength){ // REMEMBER TO UPDA
         node = malloc(sizeof(struct job));
         node->id = jobID; 
         node->length = runLength;
+        node->checked = 0;
         
         jobList->next = node;
         return;
@@ -39,8 +41,13 @@ void addNode(struct job* jobList, int jobID, int runLength){ // REMEMBER TO UPDA
     }
 }
 
+void makeListSJF(struct job* jobList){
 
-int main(int argc, char *argv[]){
+
+}
+
+
+void main(int argc, char *argv[]){
     char *myself = argv[0];
     char *scheduleType = argv[1];
     char *jobFile = argv[2];
@@ -50,7 +57,7 @@ int main(int argc, char *argv[]){
     
     if(argc != 4){
         printf("FOUR! FOUR! We need FOUR arguments, please.\n");
-        return -1;
+        exit(-1);
     }
 
     // Read input file
@@ -112,7 +119,7 @@ int main(int argc, char *argv[]){
     }
     else{
         printf("Make the scheduleType one of the following: 'FIFO,' 'SJF,' OR 'RR.'\n");
-        return -1;
+        exit(-1);
     }
-    return 0;
+    exit(0);
 }
