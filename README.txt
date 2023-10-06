@@ -59,3 +59,6 @@ Maybe try to create nodes now?
 
 Initialized buffer properly, fixing all previous issues mentioned in the prior log.
 	- Did it as a pointer, not a plain char array. Also removed some uneeded if-statements.
+
+Created addNode function, and thus completed adding the FIFO functionality.
+	- Just print the list as it is, with the jobs as the arrived.
