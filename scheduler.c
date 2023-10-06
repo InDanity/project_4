@@ -13,10 +13,10 @@ struct job{
 
 struct job* listHead;
 
-void fifoPrint(struct job currentJob){ // Will print out the job id and it's runtime, then make the next job do the same thing provided it exist. 
+void jobListPrint(struct job currentJob){ // Will print out the job id and it's runtime, then make the next job do the same thing provided it exist. 
     printf("Job %d ran for: %d\n", currentJob.id, currentJob.length);
     if(currentJob.next != NULL){
-        fifoPrint(*currentJob.next);
+        jobListPrint(*currentJob.next);
     }
     else{
         printf("That's all, folks!\n");
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]){
     if(strcmp(scheduleType, "FIFO") == 0){ // If given "FIFO"
         printf("fifo\n");
         
-        fifoPrint(*listHead->next);
+        jobListPrint(*listHead->next);
     }
     else if(strcmp(scheduleType, "SJF") == 0){ // If given "SJF"
         printf("sjf\n");
