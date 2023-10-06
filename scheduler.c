@@ -7,12 +7,37 @@ struct job{
     int id;
     int length;
     // Other data
-    struct job* prev;
-    struct job* next;
+    struct job *next;
  
 };
 
-struct job *listHead;
+struct job* listHead;
+
+void fifoPrint(struct job currentJob){ // Will print out the job id and it's runtime, then make the next job do the same thing provided it exist. 
+    printf("Job %d ran for: %d\n", currentJob.id, currentJob.length);
+    if(currentJob.next != NULL){
+        fifoPrint(*currentJob.next);
+    }
+    else{
+        printf("That's all, folks!\n");
+    }
+    return;
+}
+
+void addNode(struct job* jobList, int jobID, int runLength){ // REMEMBER TO UPDATE AS YOU ADD MORE FIELDS! Copies data of given node to the final node of a list.
+    if(jobList->next == NULL){
+        struct job *node;
+        node = malloc(sizeof(struct job));
+        node->id = jobID; 
+        node->length = runLength;
+        
+        jobList->next = node;
+        return;
+    }
+    else{
+        addNode(jobList->next, jobID, runLength);
+    }
+}
 
 
 int main(int argc, char *argv[]){
@@ -33,7 +58,7 @@ int main(int argc, char *argv[]){
     //char buffer[100];
     char* buffer = NULL;
     int readSize = 99;
-    int lineNum = 0;
+    int lineNum = 0; // Number of jobs (lines that contain)
 
     if(fd == NULL){
         printf("ERROR\n");
@@ -53,24 +78,29 @@ int main(int argc, char *argv[]){
         //idk if any of this is right lol pls dan help:
             listHead = malloc(sizeof(struct job));
 
-            struct job *node;
-            node = malloc(sizeof(struct job));
-            node->id = lineNum; 
-            node->length = runLength;
-            listHead->next = node;
+            // struct job *node;
+            // node = malloc(sizeof(struct job));
+            // node->id = lineNum; 
+            // node->length = runLength;
+            // listHead->next = node;
+
+            printf("Adding node of Job %d to job list.\n", lineNum);
+            addNode(listHead, lineNum, runLength);
 
         } else{
-            // add to end of list
-
-            //uh so theoretically you wanna access prev element, point that to this node.... gotta figure out how to do that
+            printf("Adding node of Job %d to job list.\n", lineNum);
+            addNode(listHead, lineNum, runLength);
         }
         lineNum++; 
     }
     fclose(fd);
 
+    printf("There are %d jobs.\n", lineNum);
+
     if(strcmp(scheduleType, "FIFO") == 0){ // If given "FIFO"
         printf("fifo\n");
-        // DO FIFO STUFF HEREEEE
+        
+        fifoPrint(*listHead->next);
     }
     else if(strcmp(scheduleType, "SJF") == 0){ // If given "SJF"
         printf("sjf\n");
