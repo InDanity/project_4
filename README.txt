@@ -55,3 +55,7 @@ Maybe try to create nodes now?
 	- Now need to figure out how to add to end of list 
 
 
+10/06/23
+
+Initialized buffer properly, fixing all previous issues mentioned in the prior log.
+	- Did it as a pointer, not a plain char array. Also removed some uneeded if-statements.

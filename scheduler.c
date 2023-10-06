@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
     
     
     if(argc != 4){
-        printf("FOUR! FOUR! We need FOUR arguments, please.");
+        printf("FOUR! FOUR! We need FOUR arguments, please.\n");
         return -1;
     }
 
@@ -40,10 +40,7 @@ int main(int argc, char *argv[]){
         exit(-1);
     }
     
-    while (getline(&buffer, &readSize, fd) != -1){ // While not at the end of the file //TAKE OUT THE LINENUM THING THIS IS JUST TO KEEP FROM INFINITE LOOP BEFORE WE IMPLEMENT FUNTIONALITY
-        //memset(buffer, 0x00, 100);
-        //int rc = getline(&buffer, &readSize, fd); //this line is causing a segmentation fault :/
-        //printf("%d\n", rc);
+    while (getline(&buffer, &readSize, fd) != -1){ // While not at the end of the file 
         int runLength = atoi(buffer);
     
         //printf("%s\n", buffer);
@@ -75,15 +72,17 @@ int main(int argc, char *argv[]){
         printf("fifo\n");
         // DO FIFO STUFF HEREEEE
     }
-
-    if(strcmp(scheduleType, "SJF") == 0){ // If given "SJF"
+    else if(strcmp(scheduleType, "SJF") == 0){ // If given "SJF"
         printf("sjf\n");
         // DO SJF STUFF HERE
     } 
-
-    if(strcmp(scheduleType, "RR") == 0){ // If given "RR"
+    else if(strcmp(scheduleType, "RR") == 0){ // If given "RR"
         printf("rr\n");
         // DO RR STUFF HERE
+    }
+    else{
+        printf("Make the scheduleType one of the following: 'FIFO,' 'SJF,' OR 'RR.'\n");
+        return -1;
     }
     return 0;
 }
