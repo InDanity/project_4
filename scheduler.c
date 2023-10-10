@@ -41,39 +41,6 @@ void addNode(struct job* currJob, int jobID, int runLength){ // REMEMBER TO UPDA
     }
 }
 
-// BEFORE CHANGES! 
-void makeListSJFOld(struct job* currJob){
-    struct job* tempCurrent = currJob; // used to hold the address of the current node.
-    struct job* tempNewNext;           // used to hold the address of the node 2 nodes away from the current one, provided it EXISTS.
-    struct job* tempNewFirst;          // used to hold the value of the second node (what will be the new first node), in case the first node needs to be switched.
-    while(tempCurrent != NULL && tempCurrent->next !=NULL){
-        printf("Looking at 3 nodes with lengths %d, %d, and %d.\n", tempCurrent->length, tempCurrent->next->length, tempCurrent->next->next->length);
-
-        if(tempCurrent->length > tempCurrent->next->length){  // If the current node has a smaller run length than the last, SWAPPING TIME!!!
-            printf("Well, %d is greater than %d. Swapping values!\n", tempCurrent->length, tempCurrent->next->length);
-
-            if(tempCurrent->next->next != NULL){ // If the node after the next node exists...
-                tempNewNext = tempCurrent->next->next;
-            }
-            else{ // If the node after the next node does NOT exist...
-               tempNewNext = NULL;
-            }
-            
-            printf("Making the next node from tempCurrent (a job of length %d) point to node w/ length %d.\n", tempCurrent->next->length, tempCurrent->length);
-            tempCurrent->next->next = tempCurrent; // Make the next node point to the current node, or "put it behind the current node."
-
-            printf("Swapping tempCurrent's next (a job of length %d) with job of length %d.\n", tempCurrent->next->length, tempNewNext->length);
-            tempCurrent->next = tempNewNext; // Make the current node point to the previously next node's next node, or "put it behind the next next node."
-
-            tempCurrent = currJob; // Start from beginning 
-        }
-        else{ // Otherwise, check the next node
-            tempCurrent = tempCurrent->next;
-        }
-    }
-    return;
-}
-
 void makeListSJF(struct job* currJob){
     struct job* tempCurrent = currJob; // used to hold the address of the current node.
     int newLength;
