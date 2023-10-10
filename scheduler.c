@@ -8,7 +8,6 @@ struct job{
     int length;
     // Other data
     struct job *next;
-    
     int checked;
  
 };
@@ -42,33 +41,29 @@ void addNode(struct job* currJob, int jobID, int runLength){ // REMEMBER TO UPDA
     }
 }
 
-void makeListSJF(struct job* currJob){
+// BEFORE CHANGES! 
+void makeListSJFOld(struct job* currJob){
     struct job* tempCurrent = currJob; // used to hold the address of the current node.
     struct job* tempNewNext;           // used to hold the address of the node 2 nodes away from the current one, provided it EXISTS.
     struct job* tempNewFirst;          // used to hold the value of the second node (what will be the new first node), in case the first node needs to be switched.
-    while(tempCurrent != NULL){
+    while(tempCurrent != NULL && tempCurrent->next !=NULL){
         printf("Looking at 3 nodes with lengths %d, %d, and %d.\n", tempCurrent->length, tempCurrent->next->length, tempCurrent->next->next->length);
 
         if(tempCurrent->length > tempCurrent->next->length){  // If the current node has a smaller run length than the last, SWAPPING TIME!!!
-            printf("Well, %d is greater than %d. Swapping!\n", tempCurrent->length, tempCurrent->next->length);
+            printf("Well, %d is greater than %d. Swapping values!\n", tempCurrent->length, tempCurrent->next->length);
 
             if(tempCurrent->next->next != NULL){ // If the node after the next node exists...
-                tempNewNext = tempCurrent->next->next; 
+                tempNewNext = tempCurrent->next->next;
             }
             else{ // If the node after the next node does NOT exist...
                tempNewNext = NULL;
             }
-
-            if(tempCurrent = currJob->next){ // If this is the first node, AND we were planning on swapping anyhow...
-                tempNewFirst = tempCurrent->next;
-                currJob->next = tempNewFirst; // Make the first node the second node
-            }
             
+            printf("Making the next node from tempCurrent (a job of length %d) point to node w/ length %d.\n", tempCurrent->next->length, tempCurrent->length);
             tempCurrent->next->next = tempCurrent; // Make the next node point to the current node, or "put it behind the current node."
-            printf("Made node w/ length %d point to node w/ length %d.\n", tempCurrent->next->next->length, tempCurrent->length);
-            tempCurrent->next = tempNewNext; // Make the current node point to the previously next node's next node, or "put it behind the next next node."
 
-            printf("Swapped job of length %d with job of length %d.\n", tempCurrent->length, tempCurrent->next->length);
+            printf("Swapping tempCurrent's next (a job of length %d) with job of length %d.\n", tempCurrent->next->length, tempNewNext->length);
+            tempCurrent->next = tempNewNext; // Make the current node point to the previously next node's next node, or "put it behind the next next node."
 
             tempCurrent = currJob; // Start from beginning 
         }
@@ -77,6 +72,38 @@ void makeListSJF(struct job* currJob){
         }
     }
     return;
+}
+
+void makeListSJF(struct job* currJob){
+    struct job* tempCurrent = currJob; // used to hold the address of the current node.
+    int newLength;
+    int newID;
+    int newChecked;
+
+      while(tempCurrent != NULL && tempCurrent->next !=NULL){
+        if(tempCurrent->length > tempCurrent->next->length){  // If the current node has a smaller run length than the last, SWAPPING TIME!!!
+            // Store the next node's values in temp values...
+            newLength = tempCurrent->next->length;
+            newID = tempCurrent->next->id;
+            newChecked = tempCurrent->next->checked;
+
+            // Replace next node's data with current node's data...
+            tempCurrent->next->length = tempCurrent->length;
+            tempCurrent->next->id = tempCurrent->id;
+            tempCurrent->next->checked = tempCurrent->checked;
+
+            // Replace current node's data with temp data...
+            tempCurrent->length = newLength;
+            tempCurrent->id = newID;
+            tempCurrent->checked = newChecked;
+
+            tempCurrent = currJob;
+        }
+
+        else{
+            tempCurrent = tempCurrent->next;
+        }
+      }
 }
 
 
@@ -117,6 +144,7 @@ void main(int argc, char *argv[]){
 
         //idk if any of this is right lol pls dan help:
             listHead = malloc(sizeof(struct job));
+            listHead->id = -1;
 
             // struct job *node;
             // node = malloc(sizeof(struct job));
@@ -139,12 +167,14 @@ void main(int argc, char *argv[]){
 
     if(strcmp(scheduleType, "FIFO") == 0){ // If given "FIFO"
         printf("fifo\n");
-        
         jobListPrint(*listHead->next);
+        printf("End of execution with FIFO.\n");
     }
     else if(strcmp(scheduleType, "SJF") == 0){ // If given "SJF"
         printf("sjf\n");
         makeListSJF(listHead);
+        jobListPrint(*listHead->next);
+        printf("End of execution with SJF.\n");
 
     } 
     else if(strcmp(scheduleType, "RR") == 0){ // If given "RR"
