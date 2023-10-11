@@ -97,14 +97,15 @@ void roundRobin(struct job* currJob, int timeSlice){
         printf("Why is the time slice 0???\n");
         return;
     }
+    printf("--------------------------------------------------------\n");
 
     while(tempCurrent != NULL){ // While we still got nodes...
-        if(tempCurrent->length >= timeSlice && tempCurrent->checked != 1){ // If the remaining length is still greater than the time slice, run for the time slice.
+        if(tempCurrent->length >= timeSlice){ // If the remaining length is still greater than the time slice, run for the time slice.
             printf("Job %d ran for: %d.\n", tempCurrent->id, timeSlice);
             tempCurrent->length -= timeSlice;
         }
 
-        else if(tempCurrent->length > 0 && tempCurrent->length < timeSlice && tempCurrent->checked != 1){ // Or, if the remaining length is less than the time slice but greater than 0, run for the remaining time.
+        else if(tempCurrent->length > 0 && tempCurrent->length < timeSlice){ // Or, if the remaining length is less than the time slice but greater than 0, run for the remaining time.
             printf("Job %d ran for: %d.\n", tempCurrent->id, tempCurrent->length);
             tempCurrent->length = 0;
         }
