@@ -73,19 +73,75 @@ void makeListSJF(struct job* currJob){
       }
 }
 
+int seeIfAllChecked(struct job* currJob){ // Returns a 1 if all nodes have a check value of 1, returns a 0 if otherwise.
+    struct job* tempCurrent = currJob; // used to hold the address of the current node.
+
+    while(tempCurrent != NULL && tempCurrent->next !=NULL){
+        if(tempCurrent->checked != 1 || tempCurrent->next->checked != 1){  // If a single node hasn't been checked, WE ARE DONE.
+            return 0;
+        }
+
+        else{
+            tempCurrent = tempCurrent->next;
+        }
+    }
+    printf("All programs have run to completion!\n");
+    return 1;
+}
+
+void roundRobin(struct job* currJob, int timeSlice){
+    struct job* tempCurrent = currJob; // used to hold the address of the current node.
+    int slicedRuntime;
+    
+    if(timeSlice == 0){ // In case some bozo (me) gives a time slice of 0.
+        printf("Why is the time slice 0???\n");
+        return;
+    }
+
+    while(tempCurrent != NULL){ // While we still got nodes...
+        if(tempCurrent->length >= timeSlice && tempCurrent->checked != 1){ // If the remaining length is still greater than the time slice, run for the time slice.
+            printf("Job %d ran for: %d.\n", tempCurrent->id, timeSlice);
+            tempCurrent->length -= timeSlice;
+        }
+
+        else if(tempCurrent->length > 0 && tempCurrent->length < timeSlice && tempCurrent->checked != 1){ // Or, if the remaining length is less than the time slice but greater than 0, run for the remaining time.
+            printf("Job %d ran for: %d.\n", tempCurrent->id, tempCurrent->length);
+            tempCurrent->length = 0;
+        }
+
+        else { // Or, if the remaining length is 0 but the node hasn't been checked yet, check it.
+            tempCurrent->checked = 1;
+        }
+
+        tempCurrent = tempCurrent->next;
+    }
+
+    if(seeIfAllChecked(currJob)){ // If all jobs have been checked off, we are done.
+        printf("Finished executing RR.\n");
+        return;
+    }
+    else{
+        roundRobin(currJob, timeSlice);
+    }
+}
+
 
 void main(int argc, char *argv[]){
     char *myself = argv[0];
     char *scheduleType = argv[1];
     char *jobFile = argv[2];
-    char *timeSlice = argv[3];
+    char *timeSliceString = argv[3];
     listHead = NULL;
+
+    int timeSlice = atoi(timeSliceString);
+    printf("Given a time slice of: %d\n", timeSlice);
     
     
     if(argc != 4){
         printf("FOUR! FOUR! We need FOUR arguments, please.\n");
         exit(-1);
     }
+
 
     // Read input file
     FILE * fd = fopen(jobFile, "r");
@@ -103,7 +159,6 @@ void main(int argc, char *argv[]){
         int runLength = atoi(buffer);
     
         //printf("%s\n", buffer);
-        printf("%d\n", runLength);
 
         // Insert into linked list, runLength and lineNumber as job ID
         if(listHead == NULL){
@@ -119,11 +174,11 @@ void main(int argc, char *argv[]){
             // node->length = runLength;
             // listHead->next = node;
 
-            printf("Adding node of Job %d to job list.\n", lineNum);
+            printf("Adding node of Job %d with length %d to job list.\n", lineNum, runLength);
             addNode(listHead, lineNum, runLength);
 
         } else{
-            printf("Adding node of Job %d to job list.\n", lineNum);
+            printf("Adding node of Job %d with length %d to job list.\n", lineNum, runLength);
             addNode(listHead, lineNum, runLength);
         }
         lineNum++; 
@@ -133,20 +188,20 @@ void main(int argc, char *argv[]){
     printf("There are %d jobs.\n", lineNum);
 
     if(strcmp(scheduleType, "FIFO") == 0){ // If given "FIFO"
-        printf("fifo\n");
+        printf("Executing FIFO...\n");
         jobListPrint(*listHead->next);
         printf("End of execution with FIFO.\n");
     }
     else if(strcmp(scheduleType, "SJF") == 0){ // If given "SJF"
-        printf("sjf\n");
+        printf("Executing SJF...\n");
         makeListSJF(listHead);
         jobListPrint(*listHead->next);
         printf("End of execution with SJF.\n");
 
     } 
     else if(strcmp(scheduleType, "RR") == 0){ // If given "RR"
-        printf("rr\n");
-        // DO RR STUFF HERE
+        printf("Executing RR...\n");
+        roundRobin(listHead->next, timeSlice);
     }
     else{
         printf("Make the scheduleType one of the following: 'FIFO,' 'SJF,' OR 'RR.'\n");
